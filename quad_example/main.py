@@ -49,16 +49,20 @@ def main():
     _R = euler2mat(np.random.uniform(-1.,1., size=(3,)))
     _p = np.array([0., 0., 0.])
     _g = RpToTrans(_R, _p).ravel()
-    _twist = np.random.uniform(-1., 1., size=(6,)) #* 2.0
+    _twist = np.random.uniform(-1., 1., size=(6,)) #* 2.0??why is that 6?? Porbably velocity and omega
     state = np.r_[_g, _twist]
-
+    print(state)
     target_orientation = np.array([0., 0., -9.81])
 
     err = np.zeros(simulation_time)
     for t in range(simulation_time):
 
         #### measure state and transform through koopman observables
+        print(state)
+        print("state")
         m_state = get_measurement(state)
+        print(m_state)
+        print("measure")
 
         t_state = koopman_operator.transform_state(m_state)
         err[t] = np.linalg.norm(m_state[:3] - target_orientation) + np.linalg.norm(m_state[3:])

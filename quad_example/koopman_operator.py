@@ -14,7 +14,7 @@ def psix(x):
     v2 = x[7];
     v3 = x[8];
     return np.array([
-          x[0],x[1],x[2], # g
+          x[0],x[1],x[2], # g 
           x[3],x[4],x[5], # omega
           x[6],x[7],x[8], # v
           v3 * w2,
@@ -59,6 +59,9 @@ class KoopmanOperator(object):
 
     def compute_operator_from_data(self, datain, cdata, dataout):
         # for i in range(len(cdata)-1):
+        # Asma: datain: current step  data/prev measurement
+        #       cdata : current step input/prev u
+        #       dataout: next step state with current input/current measurement
         self.counter += 1
         fk = np.hstack((
                     psix(datain),  np.dot(psiu(datain), cdata)
