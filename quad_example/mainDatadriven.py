@@ -15,27 +15,29 @@ def get_measurement(x):
 
 def prepare_data(x):
     
-    p = x[2:4]
-    v = x[5:7]
-    rpy = x[11:13]
+    print(x)
+    p = x[1:4]
+    v = x[4:7]
+    rpy = x[7:10]
+    print(rpy)
     R = euler2mat(rpy)
     g = RpToTrans(R, p).ravel()
-    omega = x[14:17]
+    omega = x[10:13]
     twist = np.r_[omega,v] #this is the serail in the measurement code
     state = np.r_[g, twist]
     return state
 
 
 #load the data
-file_train = 'train_data.mat'
-data_train = loadmat(file_train)['quad_measure']
+file_train = 'train_data_A.mat'
+data_train = loadmat(file_train)['data_set_train']
 #in the training data; there are
 # time, pos vel, acceration, rpy, omega, RPM in that order
 
 
-simulation_time = len(data_train[:,1])
+simulation_time = len(data_train[:,0])
 simulation_step_size = data_train[2,1]-data_train[1,1]
-simulation_data = data_train[:,2:]
+simulation_data = data_train[:,1:]
 
 
 #instiate koopman operator class
@@ -61,3 +63,13 @@ def main():
         koopman_operator.compute_operator_from_data(m_state,
                                                     u, 
                                                     m_next_state)
+        Kx, Ku = koopman_operator.get_linearization() ### grab the linear matrices
+        print(Ku)
+        return(Kx,Ku)
+
+
+if __name__=='__main__':
+    main()
+   
+
+
